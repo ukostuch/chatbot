@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Assistant Chatbot</title>
+</head>
+<body>
+    <h1>Shopping Assistant Chatbot</h1>
+    <div id="chat-box">
+    </div>
+    <input type="text" id="user-input" placeholder="Ask me anything..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (!userInput.trim()) return;
+
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+            const response = await fetch('http://localhost:5000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input: userInput })
+            });
+
+            const data = await response.json();
+            const botResponse = data.response;
+
+            chatBox.innerHTML += `<p><strong>Bot:</strong> ${botResponse}</p>`;
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
+</html>
